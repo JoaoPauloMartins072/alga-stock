@@ -15,7 +15,9 @@ function App() {
 
       <Container>
 
-      <Table />
+      <Table
+        
+      />
           
       
       </Container>
