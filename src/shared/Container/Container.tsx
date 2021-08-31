@@ -7,4 +7,4 @@ const Container: React.FC  = (props) => {
     </div>
 }
 
-export default Container 
+export default Container
