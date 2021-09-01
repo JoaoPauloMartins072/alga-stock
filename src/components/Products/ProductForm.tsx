@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Form from '../../shared/Form'
 import Input from '../../shared/Input'
@@ -17,6 +17,7 @@ export interface ProductCreator {
     price: number
     stock: number
 }
+
 declare interface ProductFormProps {
     form?: Product
     onSubmit: (product: ProductCreator) => void
@@ -30,7 +31,7 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
             id: props.form.id,
             name: props.form.name,
             price: String(props.form.price),
-            stock: String(props.form.price)
+            stock: String(props.form.stock)
 
         }
         : {
@@ -40,6 +41,10 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
         }
 
     const [form, setForm] = useState(initialFormState)
+
+    useEffect(() => {
+        setForm(initialFormState)
+    }, [props.form]) 
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, name } = event.target
