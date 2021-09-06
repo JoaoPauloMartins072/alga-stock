@@ -1,13 +1,17 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2'
 import './App.css';
 import Header from '../Header';
 import Container from '../../shared/Container';
 import Table, { TableHeader } from '../../shared/Table';
-import Products from '../../shared/Table/Table.mockdata';
+import { Product } from '../../shared/Table/Table.mockdata';
 import ProductForm, { ProductCreator } from '../Products/ProductForm';
-import { Product } from './../../shared/Table/Table.mockdata';
-
+import {
+  getAllProducts,
+  createSingleProduct,
+  updateSingleProduct,
+  deleteSingleProduct
+} from '../../services/Products.service';
 
 const headers: TableHeader[] = [
   { key: 'id', value: '#' },
@@ -17,82 +21,88 @@ const headers: TableHeader[] = [
 ]
 
 function App() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
 
-  const [products, setProducts ] = useState(Products)
-  
-  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(products[0])
-
-  const handleProductSubmit = (product: ProductCreator) => {
-    setProducts([
-      ...products, 
-      {
-        id: products.length + 1,
-        ...product
-      }
-    ])
+  async function fetchData() {
+    const _products = await getAllProducts()
+    setProducts(_products)
   }
 
-  const handleProductDetail= (product: Product) => {
+  useEffect(() => {
+    fetchData()
+  }, [])
+  
+  const handleProductSubmit = async (product: ProductCreator) => {
+    try {
+      await createSingleProduct(product)
+      fetchData()
+    } catch (err) {
+      Swal.fire('Oops!', err.message, 'error')
+    }
+  }
+
+  const handleProductUpdate = async (newProduct: Product) => {
+    try {
+      await updateSingleProduct(newProduct)
+      setUpdatingProduct(undefined)
+      fetchData()
+    } catch (err) {
+      Swal.fire('Oops!', err.message, 'error')
+    }
+  }
+
+  const deleteProduct = async (id: string) => {
+    try {
+      await deleteSingleProduct(id)
+      fetchData()
+      Swal.fire('Uhul!', 'Product successfully deleted', 'success')
+    } catch (err) {
+      Swal.fire('Oops!', err.message, 'error')
+    }
+  }
+
+  const handleProductDelete = (product: Product) => {
+    Swal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#09f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: `Yes, delete ${product.name}!`
+      })
+      .then((result) => {
+        if (result.value) {
+          deleteProduct(product._id)
+        }
+      })
+  }
+
+  const handleProductDetail = (product: Product) => {
     Swal.fire(
       'Product details',
-      `${product.name} cost $${product.price}. We have ${product.stock} available stock`,
+      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
       'info'
     )
   }
 
-  const handleProductUpdate = (newProduct: Product) => {
-    setProducts(products.map(product => 
-      product.id === newProduct.id
-      ? newProduct
-      : product
-
-      ))
-
-      setUpdatingProduct(undefined)
-  }
-
-  const deleteProduct = (id: number) => {
-    setProducts(products.filter(product => product.id !==id))
-  }
-  const handleProductDelete = (product: Product) => {   
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#09f',
-      cancelButtonColor: '#d33',
-      confirmButtonText: `Yes, delete ${product.name}!`
-    }).then((result) => {
-      if (result.value) {
-        deleteProduct(product.id)
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
-      }
-    })
-  }
-
-  const handleProductEdit = (product: Product) => {   
+  const handleProductEdit = (product: Product) => {
     setUpdatingProduct(product)
   }
 
   return (
     <div className="App">
       <Header title="AlgaStock" />
-
       <Container>
-
         <Table
           headers={headers}
           data={products}
-          enableActions={true}
+          enableActions
           onDelete={handleProductDelete}
           onDetail={handleProductDetail}
           onEdit={handleProductEdit}
-
         />
 
         <ProductForm
@@ -100,7 +110,6 @@ function App() {
           onSubmit={handleProductSubmit}
           onUpdate={handleProductUpdate}
         />
-
       </Container>
     </div>
   );
