@@ -1,5 +1,10 @@
-import { createStore, combineReducers } from 'redux'
-import Products from './Products.reducer'
+import { 
+    createStore, 
+    combineReducers, 
+    compose, 
+    applyMiddleware 
+} from 'redux'
+import Products from './Products/Products.reducer'
 
 const reducers = combineReducers ({
     products: Products
