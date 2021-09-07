@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Table, { TableHeader } from '../../shared/Table'
 import { 
-    getAllProducts, 
     createSingleProduct,
     updateSingleProduct,
     deleteSingleProduct
@@ -10,8 +9,6 @@ import { Product } from '../../shared/Table/Table.mockdata'
 import ProductForm, { ProductCreator } from './ProductForm'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
-import ProductsCRUD from './ProductsCRUD';
-
 
 const headers: TableHeader[] = [
     { key: 'id', value: '#' },
