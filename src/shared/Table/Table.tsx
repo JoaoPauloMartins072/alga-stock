@@ -37,10 +37,9 @@ const Table: React.FC<TableProps> = (props) => {
         }
         {
           props.enableActions
-          && <th className="right">
-            Actions
-          </th>
-
+            && <th className="right">
+              Actions
+            </th>
         }
       </tr>
     </thead>
@@ -54,7 +53,7 @@ const Table: React.FC<TableProps> = (props) => {
                 .map((item, i) =>
                   item !== '$original'
                     ? <td
-                        key={row.$original_id + i}
+                        key={row.$original._id + i}
                         className={indexedHeaders[item].right ? 'right' : ''}
                       >
                         { row[item] }
@@ -62,34 +61,35 @@ const Table: React.FC<TableProps> = (props) => {
                     : null
                 )
             }
+
             {
               props.enableActions
-              && <td className="actions right" >
-                {
-                  props.onEdit &&
-                  <Button 
-                  onClick={() => props.onEdit && props.onEdit(row.$original)}
-                  >
-                    Edit
-                  </Button>
-                }
-                {
-                  props.onDetail &&
-                  <Button 
-                  onClick={() => props.onDetail && props.onDetail(row.$original)}
-                  >
-                    Detail
-                  </Button>
-                }
-                {
-                  props.onDelete &&
-                  <Button 
-                  onClick={() => props.onDelete && props.onDelete(row.$original)}
-                  >
-                    Delete
-                  </Button>
-                }
-              </td>
+                && <td className="actions right">
+                  {
+                    props.onEdit &&
+                      <Button
+                        onClick={() => props.onEdit && props.onEdit(row.$original)}
+                      >
+                        Edit
+                      </Button>
+                  }
+                  {
+                    props.onDetail &&
+                      <Button
+                        onClick={() => props.onDetail && props.onDetail(row.$original)}
+                      >
+                        Detail
+                      </Button>
+                  }
+                  {
+                    props.onDelete &&
+                      <Button
+                        onClick={() => props.onDelete && props.onDelete(row.$original)}
+                      >
+                        Delete
+                      </Button>
+                  }
+                </td>
             }
           </tr>
         })
