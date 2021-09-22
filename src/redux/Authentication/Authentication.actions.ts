@@ -16,3 +16,7 @@ export const login =
         })
 
 }
+
+export const logout = () => ({
+    type: 'AUTHENTICATION_LOGOUT'
+})

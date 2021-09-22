@@ -5,17 +5,22 @@ import Button from '../../shared/Button'
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/Authentication/Authentication.actions'
+import { useHistory } from 'react-router'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
   const [form, setForm] = useState({
     user: '',
-    pass: ''
+    pass: '',
+    
   })
   
+const history = useHistory()
+
   const handleLogin = async () => {
     try {
       await dispatch(login(form))
+      history.push('/profile')
     } catch(err) {
       Swal.fire(
         'Error',

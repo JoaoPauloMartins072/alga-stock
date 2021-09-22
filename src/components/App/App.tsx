@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import './App.css';
-import HomeView from '../../views/HomeView';
+import ProductView from '../../views/ProductView';
 import NotFoundView from './../../views/NotFoundView';
 import LoginView from '../../views/LoginView';
 import ProfileView from './../../views/ProfileView';
@@ -12,11 +12,13 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <Route path="/" exact component={HomeView} />
+          <Route path="/" exact>
+            <Redirect to="/products" />
+          </Route>
+          <Route path="/products/:id?" exact component={ProductView} />
           <Route path="/login" exact component={LoginView} />
           <Route path="/profile" exact component={ProfileView} />
           <Route component={NotFoundView}/>
-            <HomeView/>
         </Switch>
       </BrowserRouter>
     </div>
